@@ -1019,6 +1019,7 @@ create table tbladres(
 	adres varchar(500),	
 	ilid integer references tblil(id),
 	ilceid integer references tblilce(id),
+	musteriid bigint references tblmusteri(id),
 	kapino varchar(10),
 	apartman varchar(50),
 	sokak varchar(50),
@@ -1044,3 +1045,5 @@ create table tblmusteri(
 	musteritipi boolean, -- true-> bireysel/ false->firma
 	state integer default 1	
 )
+
+
