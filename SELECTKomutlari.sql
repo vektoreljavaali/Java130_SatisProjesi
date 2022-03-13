@@ -226,19 +226,39 @@ left outer join tblmusteri as ms on ms.id=od.musteriid
 --------------------------------
 --------------------------------
 
-select ur.id,ur.ad,ur.satisfiyat,tblmarka.ad,tblmodel.ad 
+-- VIEW, hazırladığınız soruları bir şablon halinde
+-- tutmak ve daha sonra kullanmak üzere yaratılan 
+-- görünümlerdir. 
+-- view ler tablo gibi davranır. bir tablo üzerinde
+-- uyguladığınız tüm işlemleri view içinde yapabilirsiniz.
+create view vwtumurunler
+as
+select ur.id,ur.ad as urunadi,ur.satisfiyat,
+tblmarka.ad as markaadi,tblmodel.ad as modeladi
 from tblurun as ur
 left join tblmodel on tblmodel.id=ur.modelid
 left join tblmarka on tblmarka.id=tblmodel.markaid
 
-
-select ur.id,ur.ad,ur.satisfiyat,tblmarka.ad,tblmodel.ad 
+create view vwmodelurunler
+as
+select ur.id,ur.ad as urunadi,ur.satisfiyat,
+tblmarka.ad as markaadi,tblmodel.ad as modeladi
 from tblurun as ur
 inner join tblmodel on tblmodel.id=ur.modelid
 left join tblmarka on tblmarka.id=tblmodel.markaid
 
+select * from vwtumurunler where satisfiyat>15000
 
-
+------------------------------------------
+------------------------------------------
+-- 1- Bir Proje Seçiniz.
+-- 2- Tabloları ve ilişkilerini yazınız.
+-- 3- Tablo sayısı 8 den az olmasın, en az 4 ilişkili tablo olsun
+-- 4- SORU ÇIKARTIN
+--- Neden? uygulamanız yapılmak istenilen program isteklerine
+--- cevap verebiliyor mu?
+---- > Bu ay hangi müşteriler ödeme yapmadı?
+---- > 
 
 
 
