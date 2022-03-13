@@ -119,6 +119,131 @@ select 'Ahmet BAŞ'
 
 select NOW()
 
+--------------------------------
+--------------------------------
+
+-- ORDER BY,
+---- ASC, DESC
+
+select * from tblil order by ad -- ad a göre a..Z ye sırala
+
+select * from tblil order by ad desc -- ad a göer Z..a ya sırala
+
+select * from tblil order by ad asc -- ad a göre a..Z ye sırala
+
+-- ASC, küçükten büyüğe, 0...9, a...Z
+-- NOT: Eğer order by ek parametre almaz ise ASC şeklinde davranır.
+-- DESC, BÜYÜK ten küçüğe, 9...0, Z...a
+
+----------------------------------
+-----------------------------------------
+
+select * from tblmusteri
+insert into tblmusteri(ad,soyad) values
+('Ahmet','BAŞ'),('Canan','TURNA'),('Gül','GENİŞ'),('Demet','TEK'),
+('Ayhan','SİCİM'),('Deniz','KUŞ'),('Kenan','SAFİ')
+insert into tblodeme(musteriid,nakitodemetutari) values (1,98500)
+(1,2500),(2,6900),(3,1120),(4,1200),(5,150),
+(2,500),(3,600),(4,120),(5,1500),(4,500),
+(3,200),(4,900),(5,280),(3,700),(1,170),
+(4,700),(5,800),(2,3220),(2,400),(2,10),
+(5,9800),(1,1100),(1,6320),(1,330),(3,11)
+
+select * from tblodeme
+
+-- Ödeme yapan müşteri listesini çıkart
+
+select id,ad,soyad from tblmusteri where id in(
+select musteriid from tblodeme order by musteriid
+)
+
+-- Tekrar eden kayıtların tek gösterim ile gösterilmesi
+-- DISTINCT
+select distinct musteriid from tblodeme order by musteriid
+
+------------------------------------
+------------------------------------
+
+-- GROUP BY,
+
+select musteriid, SUM(nakitodemetutari) as toplamodeme
+from tblodeme 
+group by musteriid
+
+---------------------------------------------------
+---------------------------------------------------
+
+--- Bir tabloda var olan yabancı anahtarlı değerlerin 
+--- diğer tablodan alınarak birleştirilmesi nasıl yapılır?
+
+-- JOIN, referens verilmiş iki tabloyu bu referans değerini baz alarak 
+-- birleştirme işlemi yapar.
+
+--- Birleştirme işleminde dikkat edilmesi gereken durumlar
+--- 1- hangi tabloyu, hangi tabloya birleştirelim ???
+--- soruya ya da soruna göre değişir.
+
+select * from tblodeme
+join tblmusteri on tblodeme.musteriid = tblmusteri.id
+
+--- * tüm tablolardaki alanları getiriyor. Peki sadece istediğim
+--- tablodan istediğim alanları çekmek istese idim ne nasıl olacakti?
+
+select tblmusteri.id, tblmusteri.ad, tblmusteri.soyad, 
+tblodeme.nakitodemetutari
+from tblodeme
+join tblmusteri on tblodeme.musteriid = tblmusteri.id
+
+--- Pekii, tablo adları ve alan adları çooooook uzun olsa idi ve 
+--- ve bir birine yakın kelimelerle karmaşıklık artsa idi nasıl 
+--- kodlayacaktık????
+--- Ödeme yapan müşterileri ödeme tutarlarına göre sıralanmış
+--- ve ödeme sayıları belirtilmiş listesi.
+select ms.id, ms.ad, ms.soyad,SUM(od.nakitodemetutari), count(*)
+from tblodeme as od
+join tblmusteri as ms on od.musteriid = ms.id
+group by ms.id 
+having SUM(od.nakitodemetutari) > 10000 -- where normal sorgularda
+									--- group by kullanımında 
+									--- sadece having ile kısıtlama 
+									--- yapılabilir. where === having
+order by SUM(od.nakitodemetutari)
+
+
+
+--- ödeme tablosun da hangi müşteri kaç ödeme yaptı ve tutarı ne idi
+
+select musteriid, count(*),SUM(nakitodemetutari) from tblodeme group by musteriid
+
+insert into tblodeme(nakitodemetutari) values(25444),(150),(3650)
+
+select ms.id,ms.ad,ms.soyad,od.nakitodemetutari from tblodeme as od
+inner join tblmusteri as ms on ms.id=od.musteriid
+
+
+select ms.id,ms.ad,ms.soyad,od.nakitodemetutari from tblodeme as od
+left outer join tblmusteri as ms on ms.id=od.musteriid
+--------------------------------
+--------------------------------
+
+select ur.id,ur.ad,ur.satisfiyat,tblmarka.ad,tblmodel.ad 
+from tblurun as ur
+left join tblmodel on tblmodel.id=ur.modelid
+left join tblmarka on tblmarka.id=tblmodel.markaid
+
+
+select ur.id,ur.ad,ur.satisfiyat,tblmarka.ad,tblmodel.ad 
+from tblurun as ur
+inner join tblmodel on tblmodel.id=ur.modelid
+left join tblmarka on tblmarka.id=tblmodel.markaid
+
+
+
+
+
+
+
+
 
 
 
