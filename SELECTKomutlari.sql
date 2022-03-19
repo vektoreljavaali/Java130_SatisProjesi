@@ -259,6 +259,86 @@ select * from vwtumurunler where satisfiyat>15000
 --- cevap verebiliyor mu?
 ---- > Bu ay hangi müşteriler ödeme yapmadı?
 ---- > 
+----------------------------------------------
+----------------------------------------------
+--- PROJE SORULARI
+----------------------------
+-- 1- Stoğu azalan ürünleri göster (30 altında olanları bulun)
+create view vwstoguazalanurunler
+as
+select * from tblurun 
+where stokmiktari<=uyarimiktari order by id
+
+update tblurun set stokmiktari=2 where id in(4,6)
+
+-- 2- marka ve model bilgisini de içeren tablo
+create view vwmarkamodelurunbilgisi
+as
+select tblurun.id, tblurun.ad, tblmarka.ad as markaadi
+, tblmodel.ad as modeladi
+from tblurun
+left join tblmarka on tblmarka.id=tblurun.markaid
+left join tblmodel on tblmodel.id=tblurun.modelid
+
+select * from vwmarkamodelurunbilgisi
+
+-- 3- En çok Satışı yapılan ilk 3 ürün ???
+create view vwencoksatilanilkucurun
+as
+select urunid,sum(miktar) as toplammiktar
+from tblsatisdetay group by urunid order by sum(miktar) desc
+limit 3
+
+-- 4- bireysel olarak satılan ürün satış tekrarı
+-- COUNT kullanırken DİKKAT!!!
+-- COUNT(*) yaparsanız var olan satır sayısını sayar.
+-- COUNT(SUTUNADI) yazasanız o satırda NULL olmayan kayıtlarımn
+-- sayısını verir. bu nedenle, sütun adı verirken dikkat ediniz
+-- eksik bilgi dönebilirsiniz.
+create view vwsatilanurunadedi
+as
+select urunid,count(urunid) from tblsatisdetay  group by urunid
+order by count(urunid) desc
+
+-- 5- Marka ve Modeli Belli olan en çok satışı yapılan
+-- ürünlerin listesi.
+create view vwmarkamodelencoksatilanurunler
+as
+select vwbil.id,vwbil.ad,vwbil.markaadi,vwbil.modeladi,
+vwsat.toplammiktar
+from vwencoksatilanilkucurun as vwsat
+left join vwmarkamodelurunbilgisi as vwbil
+on vwbil.id=vwsat.urunid
+
+
+
+
+select * from tblsatis
+select * from tblmusteri
+insert into tblmusteri(ad,soyad) values('Ahmet','BAŞ')
+insert into tblsatis(musteriid,toplamtutar)
+values(1,63000)
+
+select * from tblsatisdetay
+select * from tblurun
+insert into tblsatisdetay(satisid, urunid,miktar)
+values(2, 4, 1), (2,6,5),(2,7,2),(2,4,10),(2,5,3),(2,7,8),
+(2,4,5),(2,8,2)
+
+
+id    ad      miktar
+1     şeker   20
+2     un      1
+3     tuz     5
+1     şeker   3
+1     şeker   2
+3     tuz     3
+
+group by 
+id    ad     toplammiktar
+1     şeker  25
+3     tuz    8
+2     un     1
 
 
 
